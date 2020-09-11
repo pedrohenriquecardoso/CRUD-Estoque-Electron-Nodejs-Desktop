@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="node_modules/bootstrap/compiler/bootstrap.css">
+    <link rel="stylesheet" href="node_modules/bootstrap/compiler/style.css">
+    <script type="module">
+        import Controller from "./controller.js"
+        window.controller = new Controller
+    </script>
+    <script>
+        let arrEstoque = []
+        if (localStorage.getItem("arrEstoque") != null) {
+            arrEstoque = JSON.parse(localStorage.getItem("arrEstoque"))
+        }
+        let sequenciaID = 1
+        if (localStorage.getItem("sequenciaIDEstoque") != null) {
+            sequenciaID = JSON.parse(localStorage.getItem("sequenciaIDEstoque"))
+        }
+        let valorEstoque = 0
+        if (localStorage.getItem("valorEstoque") != null) {
+            valorEstoque = JSON.parse(localStorage.getItem("valorEstoque"))
+        }
+        let lucroTotal = 0
+        if (localStorage.getItem("lucroTotal") != null) {
+            lucroTotal = JSON.parse(localStorage.getItem("lucroTotal"))
+        }
+        let verOrcamento = []
+        if (localStorage.getItem("verOrcamento") != null) {
+            verOrcamento = JSON.parse(localStorage.getItem("verOrcamento"))
+        }
+        let orcamento = []
+        if (localStorage.getItem("orcamento") != null) {
+            orcamento = JSON.parse(localStorage.getItem("orcamento"))
+        }
+    </script>
+    <style>
+        #mySidenav a {
+          position: absolute;
+          left: -80px;
+          transition: 0.3s;
+          padding: 15px;
+          width: 100px;
+          text-decoration: none;
+          font-size: 20px;
+          color: white;
+          border-radius: 0 5px 5px 0;
+        }
+        
+        #mySidenav a:hover {
+          left: 0;
+        }
+        
+        #about {
+          top: 20px;
+          background-color: #4CAF50;
+          margin-top: 5px;
+        }
+        
+        #blog {
+          top: 80px;
+          background-color: #2196F3;
+          margin-top: 20px;
+        }
+        
+        #projects {
+          top: 140px;
+          background-color: #f44336;
+          margin-top: 30px;
+        }
+        
+        #contact {
+          top: 200px;
+          background-color: #555;
+          margin-top: 40px;
+        }
+    </style>    
+</head>
+
+<body onload="controller.domListaEstoque(); controller.domOrcamentoNome()">
+    
+    <div id="mySidenav" class="sidenav">
+        <a href="financeiro.html" id="about">Finanças</a>
+        <a href="#" id="blog">Perfil</a>
+        <a href="#" id="projects">Contato</a>
+        <a href="#" id="contact">Logout</a>
+    </div>
+
+    <div style="margin-left:80px;">
+        
+        
+        <div class="container-fluid">
+
+            <div class="row content">
+                <div class="col-sm-3 sidenav d-none d-lg-block">
+                    <div class="container-fluid text-center my-5">
+                        <h2 style="font-family: 'Baloo Tammudu 2', cursive;">O Estoque</h2>
+    
+                    </div>
+                    <div class="container-fluid">
+                        <p class="my-3"><a
+                                class="rounded-right list-group-item list-group-item-action list-group-item-success border border-dark"
+                                href="financeiro.html">Finanças</a></p>
+                        <p class="my-3"><a
+                                class="rounded-right list-group-item list-group-item-action list-group-item-success border border-dark"
+                                href="#">Perfil</a></p>
+                        <p class="my-3"><a
+                                class="rounded-right list-group-item list-group-item-action list-group-item-success border border-dark"
+                                href="#">Logout</a></p>
+                    </div><br>
+                </div>
+                <div class="col-sm mt-3">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-2">
+                                <img id="btnAdd" width="60" src="img/mais.png"
+                                    onclick="controller.aoClicarNoIconeMostrarAdd()" alt="Add produto">
+                            </div>
+                            <div class="col-2">
+                                <img id="btnBuscaVenda" width="60" src="img/compra.png"
+                                    onclick="controller.aoClicarMostrarBuscarProdutoVenda()" alt="Buscar produto da venda">
+    
+                            </div>
+                            <div class="col-2">
+                                <img id="btnOrcamento" width="60" src="img/orcamento.png"
+                                    onclick="controller.aoClicarMostrarOrcamento()" alt="Fazer orçamento">
+    
+                            </div>
+                        </div>
+                        <div class="container" style="display: none;" id="orcamentoProdutoVenda">
+                            <div class="form-group text-center">
+                                <h5>Orçamento <a onclick="controller.aoClicarFecharMostrarOrcamento()"><img alt="close"
+                                            src="img/close.png" style="width: 20px;"></a></h5>
+                                <select class="form-control border border-primary" id="filtroBuscarOrcamento">
+                                    <option value="nada">Selecione o produto</option>
+                                </select>
+                                <input type="number" class="border border-primary form-control my-1"
+                                    placeholder="Quantidade" id="quantOrcamento">
+                                <input type="number" class="border border-primary form-control my-1" placeholder="Desconto"
+                                    id="descontoOrcamento">
+                                <input type="number" class="border border-primary form-control my-1" placeholder="Juros"
+                                    id="jurosOrcamento">
+                                <input type="number" class="border border-primary form-control my-1"
+                                    placeholder="Preço total" id="precoOrcamento">
+                                <button class="btn btn-primary form-control my-1"
+                                    onclick="controller.aoClicarAddProdutoOrcamento()">Adicionar Produto</button>
+                                <button class="btn btn-success form-control my-1"
+                                    onclick="controller.aoClicarGerarOrçamento()">Ver orçamento</button>
+                                <div class="container">
+                                    <div class="row" id="listaBuscaOrcamento">
+                                    </div>
+                                </div>
+    
+    
+    
+    
+                            </div>
+    
+                        </div>
+                        <div class="container" style="display: none;" id="buscarProdutoVenda">
+                            <div class="form-group text-center">
+                                <h5>Buscar e Vender produtos <a
+                                        onclick="controller.aoClicarFecharMostrarBuscarProdutoVenda()"><img alt="close"
+                                            src="img/close.png" style="width: 20px;"></a></h5>
+                                <input type="text" class="border border-primary my-1 form-control" id="buscarProdutoVender"
+                                    placeholder="Buscar Produto">
+                                <select id="filtroVender" class="border border-primary my-1 form-control">
+                                    <option value="nome" class="form-control">Nome</option>
+                                </select>
+                                <button class="btn btn-block btn-success" id="btnBuscaVenda"
+                                    onclick="controller.aoClicarBuscarVender()" type="button">Procurar</button>
+                                <div class="container">
+                                    <div class="row" id="listaBuscaVender">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container" style="display: none;" id="listaBusca">
+    
+                        </div>
+    
+    
+                        <div class="form-group text-center" id="mostrarAdd" style="display: none;">
+                            <h4>Adicionar produto ao estoque <a onclick="controller.aoClicarFecharAbaAdd()"><img alt="close"
+                                        style="width: 20px;" src="img/close.png"></a></h4>
+                            <input class="form-control border border-primary my-1" type="text" placeholder="Nome"
+                                id="nomeProduto">
+                            <input class="form-control border border-primary my-1" type="text" placeholder="Detalhe"
+                                id="detalheProduto">
+                            <input class="form-control border border-primary my-1" type="number" placeholder="Preço"
+                                id="precoProduto">
+                            <input class="form-control border border-primary my-1" type="number" placeholder="Quantidade"
+                                id="quantidadeProduto">
+    
+                            <a class="btn btn-success form-control" onclick="controller.aoClicarAdicionarProduto()"
+                                href="verOrcamento.html" target="_blank">Salvar</a>
+    
+                        </div>
+    
+    
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Detalhe</th>
+                                        <th>Preço</th>
+                                        <th>Quantidade</th>
+                                        <th>Alterar</th>
+                                        <th>Excluir</th>
+                                    </tr>
+    
+                                </thead>
+                                <tbody id="arrEstoqueDom">
+    
+    
+                                </tbody>
+                            </table>
+    
+                        </div>
+                    </div>
+    
+    
+    
+    
+                </div>
+    
+    
+    
+    
+            </div>
+        </div>
+    
+    
+    </div>
+
+    <!-- <nav class="navbar navbar-expand-md bg-dark navbar-dark d-lg-none">
+        <a class="navbar-brand" href="index.html" style="font-family: 'Baloo Tammudu 2', cursive;">O Estoque</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="financeiro.html">Finanças</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Perfil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Logout</a>
+                </li>
+            </ul>
+        </div>
+
+    </nav>
+
+
+
+
+
+    <div class="container-fluid">
+
+        <div class="row content">
+            <div class="col-sm-3 sidenav d-none d-lg-block">
+                <div class="container-fluid text-center my-5">
+                    <h2 style="font-family: 'Baloo Tammudu 2', cursive;">O Estoque</h2>
+
+                </div>
+                <div class="container-fluid">
+                    <p class="my-3"><a
+                            class="rounded-right list-group-item list-group-item-action list-group-item-success border border-dark"
+                            href="financeiro.html">Finanças</a></p>
+                    <p class="my-3"><a
+                            class="rounded-right list-group-item list-group-item-action list-group-item-success border border-dark"
+                            href="#">Perfil</a></p>
+                    <p class="my-3"><a
+                            class="rounded-right list-group-item list-group-item-action list-group-item-success border border-dark"
+                            href="#">Logout</a></p>
+                </div><br>
+            </div>
+            <div class="col-sm mt-3">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-2">
+                            <img id="btnAdd" width="60" src="img/mais.png"
+                                onclick="controller.aoClicarNoIconeMostrarAdd()" alt="Add produto">
+                        </div>
+                        <div class="col-2">
+                            <img id="btnBuscaVenda" width="60" src="img/compra.png"
+                                onclick="controller.aoClicarMostrarBuscarProdutoVenda()" alt="Buscar produto da venda">
+
+                        </div>
+                        <div class="col-2">
+                            <img id="btnOrcamento" width="60" src="img/orcamento.png"
+                                onclick="controller.aoClicarMostrarOrcamento()" alt="Fazer orçamento">
+
+                        </div>
+                    </div>
+                    <div class="container" style="display: none;" id="orcamentoProdutoVenda">
+                        <div class="form-group text-center">
+                            <h5>Orçamento <a onclick="controller.aoClicarFecharMostrarOrcamento()"><img alt="close"
+                                        src="img/close.png" style="width: 20px;"></a></h5>
+                            <select class="form-control border border-primary" id="filtroBuscarOrcamento">
+                                <option value="nada">Selecione o produto</option>
+                            </select>
+                            <input type="number" class="border border-primary form-control my-1"
+                                placeholder="Quantidade" id="quantOrcamento">
+                            <input type="number" class="border border-primary form-control my-1" placeholder="Desconto"
+                                id="descontoOrcamento">
+                            <input type="number" class="border border-primary form-control my-1" placeholder="Juros"
+                                id="jurosOrcamento">
+                            <input type="number" class="border border-primary form-control my-1"
+                                placeholder="Preço total" id="precoOrcamento">
+                            <button class="btn btn-primary form-control my-1"
+                                onclick="controller.aoClicarAddProdutoOrcamento()">Adicionar Produto</button>
+                            <button class="btn btn-success form-control my-1"
+                                onclick="controller.aoClicarGerarOrçamento()">Ver orçamento</button>
+                            <div class="container">
+                                <div class="row" id="listaBuscaOrcamento">
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+
+                    </div>
+                    <div class="container" style="display: none;" id="buscarProdutoVenda">
+                        <div class="form-group text-center">
+                            <h5>Buscar e Vender produtos <a
+                                    onclick="controller.aoClicarFecharMostrarBuscarProdutoVenda()"><img alt="close"
+                                        src="img/close.png" style="width: 20px;"></a></h5>
+                            <input type="text" class="border border-primary my-1 form-control" id="buscarProdutoVender"
+                                placeholder="Buscar Produto">
+                            <select id="filtroVender" class="border border-primary my-1 form-control">
+                                <option value="nome" class="form-control">Nome</option>
+                            </select>
+                            <button class="btn btn-block btn-success" id="btnBuscaVenda"
+                                onclick="controller.aoClicarBuscarVender()" type="button">Procurar</button>
+                            <div class="container">
+                                <div class="row" id="listaBuscaVender">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container" style="display: none;" id="listaBusca">
+
+                    </div>
+
+
+                    <div class="form-group text-center" id="mostrarAdd" style="display: none;">
+                        <h4>Adicionar produto ao estoque <a onclick="controller.aoClicarFecharAbaAdd()"><img alt="close"
+                                    style="width: 20px;" src="img/close.png"></a></h4>
+                        <input class="form-control border border-primary my-1" type="text" placeholder="Nome"
+                            id="nomeProduto">
+                        <input class="form-control border border-primary my-1" type="text" placeholder="Detalhe"
+                            id="detalheProduto">
+                        <input class="form-control border border-primary my-1" type="number" placeholder="Preço"
+                            id="precoProduto">
+                        <input class="form-control border border-primary my-1" type="number" placeholder="Quantidade"
+                            id="quantidadeProduto">
+
+                        <a class="btn btn-success form-control" onclick="controller.aoClicarAdicionarProduto()"
+                            href="verOrcamento.html" target="_blank">Salvar</a>
+
+                    </div>
+
+
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Detalhe</th>
+                                    <th>Preço</th>
+                                    <th>Quantidade</th>
+                                    <th>Alterar</th>
+                                    <th>Excluir</th>
+                                </tr>
+
+                            </thead>
+                            <tbody id="arrEstoqueDom">
+
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+
+
+
+        </div>
+    </div> -->
+
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/popper.js/dist/umd/popper.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+
+</body>
+
+</html>

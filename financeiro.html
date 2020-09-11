@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>financeiro</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="node_modules/bootstrap/compiler/bootstrap.css">
+    <link rel="stylesheet" href="node_modules/bootstrap/compiler/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Katibeh&display=swap" rel="stylesheet">
+    <script type="module">
+        import Controller from "./controller.js"
+        window.controller = new Controller
+    </script>
+    <script>
+        let arrEstoque = []
+        if (localStorage.getItem("arrEstoque") != null) {
+            arrEstoque = JSON.parse(localStorage.getItem("arrEstoque"))
+        }
+        let sequenciaID = 1
+        if (localStorage.getItem("sequenciaIDEstoque") != null) {
+            sequenciaID = JSON.parse(localStorage.getItem("sequenciaIDEstoque"))
+        }
+        let valorEstoque = 0
+        if (localStorage.getItem("valorEstoque") != null) {
+            valorEstoque = JSON.parse(localStorage.getItem("valorEstoque"))
+        }
+        let lucroTotal = 0
+        if (localStorage.getItem("lucroTotal") != null) {
+            lucroTotal = JSON.parse(localStorage.getItem("lucroTotal"))
+        }
+    </script>
+</head>
+
+<body onload="controller.valorEstoque(); controller.mostrarValorEstoque(); controller.mostrarLucroTotal()">
+
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark d-lg-none">
+        <a class="navbar-brand" href="index.html">Finanças</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="estoque.html">O Estoque</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Perfil</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Logout</a>
+            </li>
+          </ul>
+        </div>  
+      </nav>
+
+
+    <div class="container-fluid">
+        <div class="row content">
+            <div class="col-sm-3 sidenav d-none d-lg-block">
+                <div class="container-fluid text-center my-5">
+                    <h2 style="font-family: 'Katibeh', cursive; font-size: 45px;">Finanças</h2>
+
+                </div>
+                <div class="container-fluid">
+                    <p class="my-3"><a class="rounded-right list-group-item list-group-item-action border list-group-item-success border-dark" href="estoque.html">Estoque</a></p>
+                    <p class="my-3"><a class="rounded-right list-group-item list-group-item-action border list-group-item-success border-dark" href="#">Perfil</a></p>
+                    <p class="my-3"><a class="rounded-right list-group-item list-group-item-action border list-group-item-success border-dark" href="#">Logout</a></p>
+                </div><br>
+                
+
+            </div>
+            <div class="col-sm mt-5">
+                <div class="container text-center">
+                    <h5>Valor de venda do estoque</h5>
+                    <div id="valorEstoqueDiv">
+
+                    </div>
+
+                </div>
+                <div class="container text-center">
+                    <h5>Faturamento</h5>
+                    <div id="faturamentoDiv">
+
+                    </div>
+
+
+                </div>
+
+               
+
+            </div>
+        </div>
+    </div>
+
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/popper.js/dist/umd/popper.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+
+</body>
+
+</html>

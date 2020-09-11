@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orçamento</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="node_modules/bootstrap/compiler/bootstrap.css">
+    <link rel="stylesheet" href="node_modules/bootstrap/compiler/style.css">
+    <script type="module">
+        import Controller from "./controller.js"
+        window.controller = new Controller
+    </script>
+    <script>
+        let arrEstoque = []
+        if (localStorage.getItem("arrEstoque") != null) {
+            arrEstoque = JSON.parse(localStorage.getItem("arrEstoque"))
+        }
+        let sequenciaID = 1
+        if (localStorage.getItem("sequenciaIDEstoque") != null) {
+            sequenciaID = JSON.parse(localStorage.getItem("sequenciaIDEstoque"))
+        }
+        let valorEstoque = 0
+        if (localStorage.getItem("valorEstoque") != null) {
+            valorEstoque = JSON.parse(localStorage.getItem("valorEstoque"))
+        }
+        let lucroTotal = 0
+        if (localStorage.getItem("lucroTotal") != null) {
+            lucroTotal = JSON.parse(localStorage.getItem("lucroTotal"))
+        }
+        let verOrcamento = []
+        if (localStorage.getItem("verOrcamento") != null) {
+            verOrcamento = JSON.parse(localStorage.getItem("verOrcamento"))
+        }
+        let orcamento = []
+        if (localStorage.getItem("orcamento") != null) {
+            orcamento = JSON.parse(localStorage.getItem("orcamento"))
+        }
+    </script>
+</head>
+
+<body style="background-color: #e5715a;" onload="controller.domOrcamento(); controller.domData()">
+    <div class="container">
+        <button onclick="controller.zerarOrcamento()" class="btn btn-warning my-1">Zerar Orçamento</button>
+        <button onclick="controller.aoClicarLocationEstoque()" class="btn btn-primary my-1">Volta ao estoque</button>
+
+    </div>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="container bg-white border border-dark" style="width: 60%;">
+                <div class="row">
+                    <div class="col-6 text-center my-5">
+                        <a>Logo</a>
+                    </div>
+                    <div class="col-6 text-center my-5" id="data">
+                    
+                    </div>
+
+                </div>
+                 
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Quantidade</th>
+                                <th>Desconto</th>
+                                <th>Juros</th>
+                                <th>Preço</th>
+                            </tr>
+
+                        </thead>
+                        <tbody class="container my-5" id="produtosOrcamento">
+
+                        </tbody>
+
+                    </table>
+                    <div class="container text-center mt-5" id="totalOrcamento">
+                        <p>Total:</p>
+
+
+                    </div>
+                </div>
+                
+    
+            </div>   
+        </div>
+    </div>
+
+
+
+
+    
+
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/popper.js/dist/umd/popper.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+
+</body>
+
+</html>
