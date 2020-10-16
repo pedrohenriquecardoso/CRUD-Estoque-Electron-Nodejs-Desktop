@@ -1,15 +1,15 @@
 # OEstoque versão Desktop
 
-## App desktop para controle de estoque e finanças, para pequenas empresas.
+#### App desktop em JavaScript para controle de estoque e finanças, utilizando electron.
 
-### Requisitos não funcionais
+#### Requisitos não funcionais
 
 * Utilizar JavaScript e ElectronJs
 * Bootstrap como framework fronted
-* Salvar dados localmente e no banco de dados
-* Utilizar banco SQL
+* Salvar dados localmente no localStorage
 
-### Requisitos funcionais
+
+#### Requisitos funcionais
 
 * Cadastrar usuarios
 * CRUD de produtos
