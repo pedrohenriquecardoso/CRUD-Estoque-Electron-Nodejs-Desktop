@@ -17,3 +17,25 @@
 * Calcular valor de faturamento das vendas
 * Calcular valor do estoque
 * Rodar no Desktop
+
+#### Para fazer o clone do projeto digite no terminal do vs code:
+
+
+```
+"git clone https://github.com/pedrohenriquecardoso/CRUD-Estoque-Electron-Nodejs-Desktop.git"
+
+```
+
+#### Para fazer o download do electron como dependencie:
+
+```
+"npm install"
+
+```
+
+#### Para rodar o arquivo no desktop com electron:
+
+```
+"npm start"
+
+```
